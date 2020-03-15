@@ -1,0 +1,13 @@
+{
+  "name": "headwind",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "watch": "npx sass test/app.scss test/app.css --update --watch"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.26.3"
+  }
+}

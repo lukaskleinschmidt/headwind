@@ -1,0 +1,193 @@
+@use 'sass:list'
+@use 'sass:meta'
+@use 'sass:string'
+
+
+/// List of available breakpoints.
+///
+/// @type Map
+$breakpoints: () !default
+
+
+/// Unset a given value from a list.
+///
+/// @param {List} $list - The string that will be trimmed.
+/// @param {String} $value - Value that you want to be removed.
+/// @return {List} Returns the filtered list.
+@function _remove($list, $value)
+  $result: ()
+
+  @for $i from 1 through list.length($list)
+    @if list.nth($list, $i) != $value
+      $result: list.append($result, list.nth($list, $i))
+
+  @return $result
+
+
+/// Creates the selector depending on the current variant and breakpoint.
+///
+/// @param {String} $variant [null]
+/// @param {String} $breakpoint [null]
+/// @return {List} Returns the updated selector.
+@function _selector($variant: null, $breakpoint: null)
+  $selectors: ()
+
+  @each $selector in &
+    $selector: list.nth($selector, 1)
+
+    @if meta.type-of($selector) == 'string'
+      $selector: string.slice($selector, 2)
+
+    // Add the variant to the current selector
+    @if $variant
+      $selector: '#{$variant}\\:#{$selector}'
+
+    // Add the breakpoint to the current selector
+    @if $breakpoint
+      $selector: '#{$breakpoint}\\:#{$selector}'
+
+    @if $selector
+      // Convert back to a proper class
+      $selectors: list.append($selectors, '.#{$selector}', comma)
+
+  @return $selectors
+
+
+/// Appends a pseudo-class to a selector.
+///
+/// @param {String} $selector
+/// @param {String} $pseudo-class [null]
+/// @return {String} Returns the updated selector.
+@function _pseudo-class($selector, $pseudo-class: null)
+  @if $pseudo-class
+    $selector: '#{$selector}:#{$pseudo-class}'
+
+  @return $selector
+
+
+/// Generates the css for the given options depending on the current variant
+/// and breakpoint.
+///
+/// @param {Map} $options
+/// @param {String} $variant [null]
+/// @param {String} $breakpoint [null]
+@mixin _options($options, $variant: null, $breakpoint: null)
+  $pseudo-class: $variant
+  $group: null
+
+  // Handle group variants
+  @if meta.type-of($variant) == 'string' and string.index($variant, 'group-')
+    $pseudo-class: string.slice($pseudo-class, 7)
+    $group: '.group'
+
+  // Get the selector depending on the current variant and breakpoint
+  $selector: _selector($variant, $breakpoint)
+
+  @if $options
+    @each $key, $value in $options
+      @if $group
+        #{_pseudo-class($group, $pseudo-class)}
+          #{$selector}
+            @content($key, $value)
+      @else
+        #{$selector}
+          @content(_pseudo-class($key, $pseudo-class), $value)
+  @else
+    @if $group
+      #{_pseudo-class($group, $pseudo-class)}
+        #{$selector}
+          @content
+    @else
+      #{_pseudo-class($selector, $pseudo-class)}
+        @content
+
+
+
+/// Generates the css for the given options and variants depending on the
+/// current breakpoint.
+///
+/// @param {Map} $options
+/// @param {List} $variants
+/// @param {String} $breakpoint [null]
+@mixin _variants($options, $variants, $breakpoint: null)
+  @include _options($options, null, $breakpoint) using ($data...)
+    @content($data...)
+
+  @each $variant in $variants
+    @include _options($options, $variant, $breakpoint) using ($data...)
+      @content($data...)
+
+
+/// Delegates input depending on the parent selector.
+///
+/// @param {Map} $options
+/// @param {List} $variants
+/// @param {String} $breakpoint
+@mixin _delegate($options, $variants, $breakpoint)
+  @if &
+    @include _variants($options, $variants, $breakpoint) using ($data...)
+      @content($data...)
+
+  @else
+    // Pass options only if neccessary
+    @if $options
+      @content($options, $variants, $breakpoint)
+    @else
+      @content($variants, $breakpoint)
+
+
+/// Generates the css for the given options and variants.
+///
+/// @param {Map} $options - Can be omitted
+/// @param {List} $variants [null]
+/// @param {String} $breakpoint [null]
+@mixin variants($options, $variants: null, $breakpoint: null)
+
+  // Shift attributes by one when the options map is omitted
+  @if (meta.type-of($options) != 'map')
+    $breakpoint: $variants
+    $variants: $options
+    $options: null
+
+  // Check for the responsive variant
+  $responsive: list.index($variants, 'responsive')
+
+  @if $responsive
+    $variants: _remove($variants, 'responsive')
+
+  @at-root
+    @include _delegate($options, $variants, $breakpoint) using ($data...)
+      @content($data...)
+
+    @if $responsive
+      @each $breakpoint, $value in $breakpoints
+        @media screen and (min-width: #{$value})
+          @include _delegate($options, $variants, $breakpoint) using ($data...)
+            @content($data...)
+
+
+/// Generates the responsive css for the given options and additional variants.
+///
+/// @param {Map} $options - Can be omitted
+/// @param {List} $variants [null]
+/// @param {String} $breakpoint [null]
+@mixin responsive($options: null, $variants: null)
+
+  // Shift attributes by one when the options map is omitted
+  @if (meta.type-of($options) != 'map')
+    $variants: $options
+    $options: null
+
+  // Make responsive by default
+  @if $variants
+    $variants: list.append($variants, 'responsive')
+  @else
+    $variants: 'responsive'
+
+  // Pass options only if neccessary
+  @if $options
+    @include variants($options, $variants) using ($data...)
+      @content($data...)
+  @else
+    @include variants($variants) using ($data...)
+      @content($data...)

@@ -1,0 +1,116 @@
+@use '../headwind' as *
+
+$padding: () !default
+$margin: () !default
+
+@include responsive using ($args...)
+  .p
+    @include variants($padding, $args...) using ($key, $value)
+      &-#{$key}
+        padding: $value
+
+  .px
+    @include variants($padding, $args...) using ($key, $value)
+      &-#{$key}
+        padding-right: $value
+        padding-left: $value
+
+  .py
+    @include variants($padding, $args...) using ($key, $value)
+      &-#{$key}
+        padding-bottom: $value
+        padding-top: $value
+
+  .pt
+    @include variants($padding, $args...) using ($key, $value)
+      &-#{$key}
+        padding-top: $value
+
+  .pr
+    @include variants($padding, $args...) using ($key, $value)
+      &-#{$key}
+        padding-right: $value
+
+  .pb
+    @include variants($padding, $args...) using ($key, $value)
+      &-#{$key}
+        padding-bottom: $value
+
+  .pl
+    @include variants($padding, $args...) using ($key, $value)
+      &-#{$key}
+        padding-left: $value
+
+  .m
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin: $value
+
+  .mx
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-right: $value
+        margin-left: $value
+
+  .my
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-bottom: $value
+        margin-top: $value
+
+  .mt
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-top: $value
+
+  .mr
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-right: $value
+
+  .mb
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-bottom: $value
+
+  .ml
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-left: $value
+
+  .-m
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin: -$value
+
+  .-mx
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-right: -$value
+        margin-left: -$value
+
+  .-my
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-bottom: -$value
+        margin-top: -$value
+
+  .-mt
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-top: -$value
+
+  .-mr
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-right: -$value
+
+  .-mb
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-bottom: -$value
+
+  .-ml
+    @include variants($margin, $args...) using ($key, $value)
+      &-#{$key}
+        margin-left: -$value

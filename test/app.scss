@@ -1,0 +1,18 @@
+@use '../sass/headwind' as * with (
+  $breakpoints: (
+    's': 640px,
+    // 'm': 768px,
+    // 'l': 1024px,
+    // 'w': 1280px,
+  )
+);
+
+@use '../sass/utilities/layout';
+@use '../sass/utilities/spacing' with (
+  $padding: (
+    'px': 1px,
+  ),
+  $margin: (
+    'px': 1px,
+  ),
+);

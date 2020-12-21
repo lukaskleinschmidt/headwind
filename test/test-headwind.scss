@@ -1,0 +1,74 @@
+@use '../src/headwind' as *;
+
+@mixin create() {
+  $options: (
+    '0': 0,
+    '1': .25rem,
+    '2': .5rem,
+    '3': .75rem,
+    '4': 1rem,
+  );
+
+  @include responsive('hover' 'active') using ($props...) {
+
+    .p {
+      @include options($options, $props...) using ($value) {
+        padding: $value;
+      }
+    }
+
+    .px {
+      @include options($options, $props...) using ($value) {
+        padding-left: $value;
+        padding-right: $value;
+      }
+    }
+
+    .py {
+      @include options($options, $props...) using ($value) {
+        padding-top: $value;
+        padding-bottom: $value;
+      }
+    }
+
+    .pt {
+      @include options($options, $props...) using ($value) {
+        padding-top: $value;
+      }
+    }
+
+    .pr {
+      @include options($options, $props...) using ($value) {
+        padding-right: $value;
+      }
+    }
+
+    .pb {
+      @include options($options, $props...) using ($value) {
+        padding-bottom: $value;
+      }
+    }
+
+    .pl {
+      @include options($options, $props...) using ($value) {
+        padding-left: $value;
+      }
+    }
+  }
+
+
+  $display: (
+    'block': block,
+    'inline-block': inline-block,
+    'inline': inline,
+    'flex': flex,
+    'inline-flex': inline-flex,
+    'grid': grid,
+    'inline-grid': inline-grid,
+    'hidden': none,
+  );
+
+  @include options($display) using ($value) {
+    display: $value;
+  }
+}

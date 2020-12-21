@@ -1,18 +1,47 @@
-@use '../sass/headwind' as * with (
-  $breakpoints: (
-    's': 640px,
-    // 'm': 768px,
-    // 'l': 1024px,
-    // 'w': 1280px,
+$breakpoints: (
+  's': 640px,
+  'm': 768px,
+  'l': 1024px,
+);
+
+@use '../src/snug' with (
+  $breakpoints: $breakpoints,
+);
+
+
+// Overwriting defaults
+@use '../src/snugs/display' with (
+  $variants: (),
+  $options: (
+    'table': table,
+    'block': block,
   )
 );
 
-@use '../sass/utilities/layout';
-@use '../sass/utilities/spacing' with (
-  $padding: (
-    'px': 1px,
-  ),
-  $margin: (
-    'px': 1px,
-  ),
-);
+
+// Extending defaults
+@include display.create($options: (
+  'table': table,
+));
+
+
+// @use '../src/headwind' with (
+//   $breakpoints: $breakpoints,
+// );
+
+// @use './test-headwind';
+
+// @for $i from 1 through 100 {
+//   @include test-headwind.create();
+// }
+
+
+// @use '../src/snug' with (
+//   $breakpoints: $breakpoints,
+// );
+
+// @use './test-snug';
+
+// @for $i from 1 through 100 {
+//   @include test-snug.create();
+// }
